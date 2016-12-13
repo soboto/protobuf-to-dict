@@ -39,7 +39,10 @@ def enum_label_name(field, value):
 def protobuf_to_dict(pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False):
     result_dict = {}
     extensions = {}
-    for field, value in pb.ListFields():
+
+    for field_name in pb.DESCRIPTOR.fields_by_name:
+        field = pb.DESCRIPTOR.fields_by_name[field_name]
+        value = getattr(pb, field_name)
         type_callable = _get_field_value_adaptor(pb, field, type_callable_map, use_enum_labels)
         if field.label == FieldDescriptor.LABEL_REPEATED:
             type_callable = repeated(type_callable)
@@ -86,7 +89,7 @@ def dict_to_protobuf(pb_klass_or_instance, values, type_callable_map=REVERSE_TYP
 
     :param pb_klass_or_instance: a protobuf message class, or an protobuf instance
     :type pb_klass_or_instance: a type or instance of a subclass of google.protobuf.message.Message
-    :param dict values: a dictionary of values. Repeated and nested values are 
+    :param dict values: a dictionary of values. Repeated and nested values are
        fully supported.
     :param dict type_callable_map: a mapping of protobuf types to callables for setting
        values on the target instance.

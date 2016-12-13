@@ -10,3 +10,5 @@ build
 *~
 src/protobuf_to_dict.egg-info
 
+# Sublime
+ftpsync.settings
