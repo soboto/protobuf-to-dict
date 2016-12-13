@@ -51,7 +51,10 @@ def protobuf_to_dict(pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=Fa
             extensions[str(field.number)] = type_callable(value)
             continue
 
-        result_dict[field.name] = type_callable(value)
+        if type_callable == unicode and value == '':
+            result_dict[field.name] = None
+        else:
+            result_dict[field.name] = type_callable(value)
 
     if extensions:
         result_dict[EXTENSION_CONTAINER] = extensions
